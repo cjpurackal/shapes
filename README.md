@@ -16,5 +16,6 @@ example :
 ##Usage
 
 example :
-	> python visualize.py --save_dir /tmp
+	> python visualize.py --save_dir /tmp/dataset
+
 
