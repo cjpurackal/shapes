@@ -5,21 +5,30 @@ import os
 import argparse
 
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument("--save_dir",
 					help="For saving the images and labels in a dir",
-					type=str)
-parser.add_argument("--visualize", 
-					help="If you wish to visualize the box and labels that you generate",
-					type=bool)
+					type=str
+					)
+parser.add_argument("--canvas_size",
+					help="Size of the image",
+					nargs='+', default=(500, 500),
+					type=int
+					)
+parser.add_argument("--num_images",
+					help="Number of images need in your dataset",
+					type=int
+					)
+parser.add_argument("--shapes",
+					help="The shapes that you need draw in canvas",
+					nargs='+',
+					default=['circle', 'rect', 'circle', 'rect']
+					)
 args = parser.parse_args()
-
-
-canvas_size = (500, 500)
-shapes = ['circle', 'rect', 'circle', 'rect']
+canvas_size = args.canvas_size
+shapes = args.shapes
 shape_attribs = [[20], [15, 15], [40], [30, 50]]
-num_images = 2
+num_images = args.num_images
 bbox_label_format = 'bbox'
 shuffle_bg = True
 shuffle_shape_color = True
@@ -54,8 +63,7 @@ def save_dir(path):
 	os.makedirs(lab_path)
 	return img_path, lab_path 
 
-im_path, lab_path = save_dir(args.save_dir)
-
+img_path, lab_path = save_dir(args.save_dir)
 
 debug = True
 if debug:
@@ -82,6 +90,8 @@ for n in range(num_images):
 	ax.set_ylim([0, canvas_y])
 	for i, obj in enumerate(objs):
 		ax.add_artist(obj)
-	fig.savefig('%s/shapes_%d.png'%(im_path, n))
-	with open('%sshapes_%d.json'%(lab_path, n), 'w') as outfile:
+	fig.savefig('%s/shapes_%d.jpg'%(img_path, n))
+	with open('%s/shapes_%d.json'%(lab_path, n), 'w') as outfile:
 		json.dump(obj_bbox, outfile)
+
+print ("Generated dataset saved in %s"%args.save_dir)
