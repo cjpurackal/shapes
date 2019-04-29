@@ -1,8 +1,19 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import json
-# import argpaser
+import os
+import argparse
 
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--save_dir",
+					help="For saving the images and labels in a dir",
+					type=str)
+parser.add_argument("--visualize", 
+					help="If you wish to visualize the box and labels that you generate",
+					type=bool)
+args = parser.parse_args()
 
 
 canvas_size = (500, 500)
@@ -36,12 +47,20 @@ def gen_bbox(x, y, i, attr):
 		return {'object':'rect','x':x, 'y':y, 'w':shape_attribs[i][0], 'h':shape_attribs[i][1]}
 	elif shapes[i] == 'circle':
 		return {'object':'circle','x':x - shape_attribs[i][0], 'y':y - shape_attribs[i][0], 'w':2*shape_attribs[i][0], 'h':2*shape_attribs[i][0]}
+def save_dir(path):
+	img_path = os.path.join(path, "dataset", "images")
+	lab_path = os.path.join(path, "dataset", "labels_pascalvoc")
+	os.makedirs(img_path)
+	os.makedirs(lab_path)
+	return img_path, lab_path 
+
+im_path, lab_path = save_dir(args.save_dir)
 
 
 debug = True
 if debug:
 	print ("num_rows : %d "%num_rows)
-	print ("num_columns : %d"%num_columns) 
+	print ("num_columns : %d"%num_columns)
 
 
 for n in range(num_images):
@@ -63,6 +82,6 @@ for n in range(num_images):
 	ax.set_ylim([0, canvas_y])
 	for i, obj in enumerate(objs):
 		ax.add_artist(obj)
-	fig.savefig('shapes_%d.png'%n)
-	with open('shapes_%d.json'%n, 'w') as outfile:
+	fig.savefig('%s/shapes_%d.png'%(im_path, n))
+	with open('%sshapes_%d.json'%(lab_path, n), 'w') as outfile:
 		json.dump(obj_bbox, outfile)
