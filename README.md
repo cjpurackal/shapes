@@ -9,7 +9,6 @@ python run.py --save_dir /tmp/ --canvas_size 500 500 --num_images 5 --shapes cir
 ```
 
 Or you can run simply with defualt config
-example :
 ```
  python run.py --save_dir /tmp/
 ```
