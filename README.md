@@ -1,21 +1,23 @@
 # shapes
-A dataset for validating computer vision models for classification, detection and segmentation before testing it out with real world datasets
+A dataset generator for validating computer vision models for classification, detection and segmentation before testing it out with real world datasets
 
 # Usage
 
 example :
-	> python draw.py --save_dir /tmp --canvas_size 500 500 --num_images 5 --shapes circle rect circle rect
-
+'''
+python draw.py --save_dir /tmp --canvas_size 500 500 --num_images 5 --shapes ['circle','rect','circle','rect'] --shapes_attrib [[20], [15, 15], [40], [30, 50]]
+'''
 
 Or you can run simply with defualt config
 example :
-	> python draw.py --save_dir --num_images 10
-
+'''
+ python draw.py --save_dir
+'''
 
 # Visualize 
-##Usage
 
 example :
-	> python visualize.py --save_dir /tmp/dataset
-
+'''
+python visualize.py --dataset_dir /tmp/dataset
+'''
 
