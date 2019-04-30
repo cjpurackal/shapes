@@ -17,15 +17,14 @@ parser.add_argument(
 		type=int, default=10)
 parser.add_argument(
 		"--shapes", help="The shapes that you need draw in canvas",
-		nargs='+', default=['circle', 'rect', 'circle', 'rect'])
-parser.add_argument(
-		"--shapes_attribs", help="The shapes attribs for passed shapes",
-		nargs='+', default=[[20], [15, 15], [40], [30, 50]])
+		nargs='+', default=['circle', 'rect'])
 
 args = parser.parse_args()
 canvas_size = args.canvas_size
 shapes = args.shapes
-shapes_attribs = args.shapes_attribs
+
+#need to make an option for setting up the attribs dynamically
+shapes_attribs = [[20], [15, 15]]
 num_images = args.num_images
 bbox_label_format = 'bbox'
 shuffle_bg = True
