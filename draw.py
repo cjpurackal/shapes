@@ -59,8 +59,8 @@ def gen_bbox(x, y, i, attr):
 			'w': shapes_attribs[i][0], 'h': shapes_attribs[i][1]}
 	elif shapes[i] == 'circle':
 		return {
-			'object': 'circle', 'x': x - shapes_attribs[i][0]/2,
-			'y': y - shapes_attribs[i][0]/2,
+			'object': 'circle', 'x': x - shapes_attribs[i][0],
+			'y': y - shapes_attribs[i][0],
 			'w': 2 * shapes_attribs[i][0], 'h': 2 * shapes_attribs[i][0]}
 
 
