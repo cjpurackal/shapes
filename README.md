@@ -13,7 +13,6 @@ example :
 ```
  python draw.py --save_dir /tmp/
 ```
-![Drag Racing](imgs/shapes_1.png)
 
 # Visualize 
 
@@ -21,4 +20,5 @@ example :
 ```
 python visualize.py --dataset_dir /tmp/dataset
 ```
-
+![](imgs/shapes_1.png)
+![](imgs/shapes_2.png)
