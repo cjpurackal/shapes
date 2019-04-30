@@ -4,7 +4,6 @@ A dataset generator for validating computer vision models for classification, de
 # Usage
 
 Generate a dataset of circles and rectangles with bounding boxes
-example :
 ```
 python run.py --save_dir /tmp/ --canvas_size 500 500 --num_images 5 --shapes ['circle','rect','circle','rect'] --shapes_attrib [[20], [15, 15], [40], [30, 50]]
 ```
@@ -17,7 +16,7 @@ example :
 
 # Visualize 
 
-example :
+Visualize the generated dataset
 ```
 python visualize.py --dataset_dir /tmp/dataset
 ```
