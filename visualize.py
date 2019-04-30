@@ -15,16 +15,20 @@ def json_listing(json_data):
 
 def bbox_plot(img, boxes):
 
-	fig, ax = plt.subplots(1)
-	print (boxes)
+	fig, ax = plt.subplots(
+			figsize=(int(500/100), int(500/100)))
+	ax.set_xlim([0, 500])
+	ax.set_ylim([0, 500])
+	plt.gca().invert_yaxis()
 	ax.imshow(img)
+	objs = []
 	for i in range(len(boxes)):
-		k = 0
-		s = plt.Rectangle(
-				(boxes[i][k], boxes[i][k+1]), boxes[i][k+2],
-				boxes[i][k+3], linewidth=1, edgecolor='g',
-				facecolor="none")
-		ax.add_patch(s)
+		objs.append(plt.Rectangle(
+				(boxes[i][0], boxes[i][1]), boxes[i][2],
+				boxes[i][3], linewidth=1, edgecolor='g',
+				facecolor="none"))
+	for i, obj in enumerate(objs):
+		ax.add_artist(obj)
 	plt.show()
 
 
@@ -48,6 +52,6 @@ def bounding_boxes(path):
 if __name__ == "__main__":
 	parser = argparse.ArgumentParser()
 	parser.add_argument(
-			"--save_dir", help="dataset path to be visualize")
+			"--dataset_dir", help="dataset path to be visualize")
 	args = parser.parse_args()
-	bounding_boxes(args.save_dir)
+	bounding_boxes(args.dataset_dir)
