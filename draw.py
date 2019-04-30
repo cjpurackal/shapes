@@ -93,7 +93,9 @@ for n in range(num_images):
 						mx * (2 * row) + (row > 0) * mx * 3 + mx)
 				objs.append(make(x, y, obj_i, obj_i_attr))
 				obj_bbox.append(gen_bbox(x, y, obj_i, obj_i_attr))
-	fig, ax = plt.subplots()
+	fig, ax = plt.subplots(
+			figsize=(int(canvas_x / 100), int(canvas_y / 100)))
+	ax = fig.add_axes([0, 0, 1, 1])
 	ax.set_xlim([0, canvas_x])
 	ax.set_ylim([0, canvas_y])
 	for i, obj in enumerate(objs):
