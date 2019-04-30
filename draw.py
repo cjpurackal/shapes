@@ -55,8 +55,8 @@ def gen_bbox(x, y, i, attr):
 			'w': shape_attribs[i][0], 'h': shape_attribs[i][1]}
 	elif shapes[i] == 'circle':
 		return {
-			'object': 'circle', 'x': x - shape_attribs[i][0],
-			'y': y - shape_attribs[i][0],
+			'object': 'circle', 'x': x - shape_attribs[i][0]/2,
+			'y': y - shape_attribs[i][0]/2,
 			'w': 2 * shape_attribs[i][0], 'h': 2 * shape_attribs[i][0]}
 
 
@@ -91,16 +91,20 @@ for n in range(num_images):
 				y = np.random.randint(
 						mx * (2 * row) + (row > 0) * mx * 3,
 						mx * (2 * row) + (row > 0) * mx * 3 + mx)
+				print ("n : %d x : %d  y : %d"%(n, x, y))
 				objs.append(make(x, y, obj_i, obj_i_attr))
 				obj_bbox.append(gen_bbox(x, y, obj_i, obj_i_attr))
+				# print ("n : %d x : %d  y : %d"%(n, x, y))
+				print (obj_bbox)
+				# input()
 	fig, ax = plt.subplots(
-			figsize=(int(canvas_x / 100), int(canvas_y / 100)))
+			figsize=(int(canvas_x ), int(canvas_y )))
 	ax = fig.add_axes([0, 0, 1, 1])
 	ax.set_xlim([0, canvas_x])
 	ax.set_ylim([0, canvas_y])
 	for i, obj in enumerate(objs):
 		ax.add_artist(obj)
-	fig.savefig('%s/shapes_%d.jpg' % (img_path, n))
+	fig.savefig('%s/shapes_%d.png' % (img_path, n))
 	with open('%s/shapes_%d.json' % (lab_path, n), 'w') as outfile:
 		json.dump(obj_bbox, outfile)
 

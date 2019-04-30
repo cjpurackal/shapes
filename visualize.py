@@ -14,11 +14,13 @@ def json_listing(json_data):
 
 
 def bbox_plot(img, boxes):
+
 	fig, ax = plt.subplots(1)
+	print (boxes)
 	ax.imshow(img)
 	for i in range(len(boxes)):
 		k = 0
-		s = patches.Rectangle(
+		s = plt.Rectangle(
 				(boxes[i][k], boxes[i][k+1]), boxes[i][k+2],
 				boxes[i][k+3], linewidth=1, edgecolor='g',
 				facecolor="none")
@@ -31,10 +33,12 @@ def bounding_boxes(path):
 	img_path, lab_path = os.listdir(path)
 	img_path = os.path.join(path, img_path)
 	lab_path = os.path.join(path, lab_path)
-	img_list = os.listdir(img_path)
-	lab_list = os.listdir(lab_path)
+	img_list = sorted(os.listdir(img_path))
+	lab_list = sorted(os.listdir(lab_path))
 	for im, lab in zip(img_list, lab_list):
 		img = plt.imread(os.path.join(img_path, im))
+		print (im)
+		print (lab)
 		with open(os.path.join(lab_path, lab), 'r') as json_data:
 			json_data = json.load(json_data)
 			box_list = json_listing(json_data)
