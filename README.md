@@ -13,7 +13,7 @@ example :
 ```
  python draw.py --save_dir /tmp/
 ```
-![Drag Racing](/tmp/dataset/images/shapes_0.png)
+![Drag Racing](imgs/shapes_1.png)
 
 # Visualize 
 
