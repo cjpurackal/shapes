@@ -3,15 +3,16 @@ A dataset generator for validating computer vision models for classification, de
 
 # Usage
 
+Generate a dataset of circles and rectangles with bounding boxes
 example :
 ```
-python draw.py --save_dir /tmp/ --canvas_size 500 500 --num_images 5 --shapes ['circle','rect','circle','rect'] --shapes_attrib [[20], [15, 15], [40], [30, 50]]
+python run.py --save_dir /tmp/ --canvas_size 500 500 --num_images 5 --shapes ['circle','rect','circle','rect'] --shapes_attrib [[20], [15, 15], [40], [30, 50]]
 ```
 
 Or you can run simply with defualt config
 example :
 ```
- python draw.py --save_dir /tmp/
+ python run.py --save_dir /tmp/
 ```
 
 # Visualize 
