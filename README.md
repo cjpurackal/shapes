@@ -1,4 +1,4 @@
-# shapes :large_blue_circle: 	
+# shapes :large_blue_circle: :black_square:
 A dataset generator for validating computer vision models for classification, detection and segmentation before testing it out with real world datasets
 
 # Usage
