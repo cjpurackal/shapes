@@ -34,7 +34,7 @@ def bbox_plot(img, boxes):
 
 def bounding_boxes(path):
 
-	img_path, lab_path = os.listdir(path)
+	img_path, lab_path = sorted(os.listdir(path))
 	img_path = os.path.join(path, img_path)
 	lab_path = os.path.join(path, lab_path)
 	img_list = sorted(os.listdir(img_path))
