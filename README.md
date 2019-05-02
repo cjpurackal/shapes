@@ -5,7 +5,7 @@ A dataset generator for validating computer vision models for classification, de
 
 Generate a dataset of circles and rectangles with bounding boxes
 ```
-python run.py --save_dir /tmp/ --canvas_size 500 500 --num_images 5 --shapes circle rect
+python run.py --save_dir /tmp/ --image_size 500 500 --num_images 5 --shapes circle rect
 ```
 
 Or you can run simply with defualt config

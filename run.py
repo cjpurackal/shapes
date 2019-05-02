@@ -5,14 +5,15 @@ import os
 import argparse
 
 colors = ['blue','green','red','cyan','magenta','yellow','black','white']
-
+task_types = ['recognition', 'detection', 'segmentation']
+all_shapes = ['rect', 'circle']
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
 		"--save_dir", help="For saving the images and labels in a dir",
 		type=str)
 parser.add_argument(
-		"--canvas_size", help="Size of the image", nargs='+',
+		"--image_size", help="Size of the image", nargs='+',
 		default=(500, 500), type=int)
 parser.add_argument(
 		"--num_images", help="Number of images need in your dataset",
@@ -26,26 +27,32 @@ parser.add_argument(
 parser.add_argument(
 		"--shuffle_color", help="shuffle colors for the shape",
 		type=bool, default=False)
+parser.add_argument(
+		"--task_type", help="specify type of task : %s"%str(task_types),
+		type=str, default='detection')
 
 
 args = parser.parse_args()
-canvas_size = args.canvas_size
+image_size = args.image_size
 shapes = args.shapes
 num_images = args.num_images
 save_dir = args.save_dir
 shape_color = args.shape_color
 shuffle_color = args.shuffle_color
-
+task_type = args.task_type
 
 assert save_dir, "specify save directory"
+assert shape_color in colors, "Available colors :"+str(colors)
+assert task_type in task_types, "Available task types :"+str(task_types)
 
 #need to make an option for setting up the attribs dynamically
 shapes_attribs = [[20], [15, 15]]
+shapes = set(shapes)
 bbox_label_format = 'bbox'
 shuffle_bg = True
 shuffle_shape_color = True
-canvas_x = canvas_size[0]
-canvas_y = canvas_size[1]
+canvas_x = image_size[0]
+canvas_y = image_size[1]
 x_white_space = canvas_x/10
 y_white_space = canvas_y/10
 mx = 0
@@ -61,10 +68,10 @@ def make(x, y, i, attr):
 	if shapes[i] == 'rect':
 		color = shuffle_color*colors[np.random.randint(0,7)] + (1 - shuffle_color)*shape_color
 		return plt.Rectangle(
-				(x, y), shapes_attribs[i][0], shapes_attribs[i][1], color=color)
+				(x, y), attr[i][0], attr[i][1], color=color)
 	elif shapes[i] == 'circle':
 		color = shuffle_color*colors[np.random.randint(0,7)] + (1 - shuffle_color)*shape_color
-		rad = shapes_attribs[i][0]
+		rad = attr[i][0]
 		return plt.Circle((x, y), rad, color=color)
 
 
@@ -80,45 +87,90 @@ def gen_bbox(x, y, i, attr):
 			'w': 2 * shapes_attribs[i][0], 'h': 2 * shapes_attribs[i][0]}
 
 
-def save_dir_paths(path):
-	img_path = os.path.join(path, "dataset", "images")
-	lab_path = os.path.join(path, "dataset", "labels_pascalvoc")
-	os.makedirs(img_path)
-	os.makedirs(lab_path)
-	return img_path, lab_path
-
-img_path, lab_path = save_dir_paths(save_dir)
 
 
-for n in range(num_images):
-	objs = []
-	obj_bbox = []
-	for row in range(num_rows):
-		objs_num = np.random.randint(0, num_columns)
-		for i in range(objs_num):
-			obj_i = np.random.randint(0, len(shapes))
-			obj_i_attr = shapes_attribs[obj_i]
-			# random x, y cord gen
-			if np.random.randint(0, 2) * i % 2:
-				x = np.random.randint(
-						mx * i + (i > 0) * 3 * mx,
-						mx * i + (i > 0) * 3 * mx + mx)
-				y = np.random.randint(
-						mx * (2 * row) + (row > 0) * mx * 3,
-						mx * (2 * row) + (row > 0) * mx * 3 + mx)
-				objs.append(make(x, y, obj_i, obj_i_attr))
-				obj_bbox.append(gen_bbox(x, y, obj_i, obj_i_attr))
-	fig, ax = plt.subplots(
-			figsize=(int(canvas_x/100), int(canvas_y/100)))
-	ax = fig.add_axes([0, 0, 1, 1])
-	ax.set_xlim([0, canvas_x])
-	ax.set_ylim([0, canvas_y])
-	plt.gca().invert_yaxis()
+def detection_gen():
+	def make_dirs():
+		img_path = os.path.join(save_dir, "dataset", "images")
+		lab_path = os.path.join(save_dir, "dataset", "labels_json")
+		os.makedirs(img_path)
+		os.makedirs(lab_path)
+		return img_path, lab_path
 
-	for i, obj in enumerate(objs):
-		ax.add_artist(obj)
-	fig.savefig('%s/shapes_%d.png' % (img_path, n))
-	with open('%s/shapes_%d.json' % (lab_path, n), 'w') as outfile:
-		json.dump(obj_bbox, outfile)
+	img_path, lab_path = make_dirs()
 
-print ("Generated dataset saved in %s" % save_dir)
+	for n in range(num_images):
+		objs = []
+		obj_bbox = []
+		for row in range(num_rows):
+			objs_num = np.random.randint(0, num_columns)
+			for i in range(objs_num):
+				obj_i = np.random.randint(0, len(shapes))
+				obj_i_attr = shapes_attribs[obj_i]
+				# random x, y cord gen
+				if np.random.randint(0, 2) * i % 2:
+					x = np.random.randint(
+							mx * i + (i > 0) * 3 * mx,
+							mx * i + (i > 0) * 3 * mx + mx)
+					y = np.random.randint(
+							mx * (2 * row) + (row > 0) * mx * 3,
+							mx * (2 * row) + (row > 0) * mx * 3 + mx)
+					objs.append(make(x, y, obj_i, obj_i_attr))
+					obj_bbox.append(gen_bbox(x, y, obj_i, obj_i_attr))
+		fig, ax = plt.subplots(
+				figsize=(int(canvas_x/100), int(canvas_y/100)))
+		ax = fig.add_axes([0, 0, 1, 1])
+		ax.set_xlim([0, canvas_x])
+		ax.set_ylim([0, canvas_y])
+		plt.gca().invert_yaxis()
+
+		for i, obj in enumerate(objs):
+			ax.add_artist(obj)
+		fig.savefig('%s/shapes_%d.png' % (img_path, n))
+		with open('%s/shapes_%d.json' % (lab_path, n), 'w') as outfile:
+			json.dump(obj_bbox, outfile)
+
+	print ("Generated dataset in %s" % save_dir)
+
+def recognition_gen():
+	def make_dirs():
+		for shape in shapes:
+			os.makedirs(os.path.join(save_dir, "dataset", shape))
+	canvas_x = canvas_y = 100
+
+	for n in range(num_images):
+		rect_w = rect_h = circ_rad = np.random.randint(canvas_x/4, 3*canvas_x/4)
+		shapes_attribs = [[rect_w, rect_h], [circ_rad]]
+
+		obj_i = np.random.randint(0, len(shapes))
+		obj_i_attr = shapes_attribs[obj_i]
+		x = np.random.randint(
+						0,
+						canvas_x/4)
+		y = np.random.randint(
+						0,
+						canvas_y/4)
+
+		fig, ax = plt.subplots(
+				figsize=(int(canvas_x/100), int(canvas_y/100)))
+		ax = fig.add_axes([0, 0, 1, 1])
+		ax.set_xlim([0, canvas_x])
+		ax.set_ylim([0, canvas_y])
+		plt.gca().invert_yaxis()
+		ax.add_artist(make(x, y, obj_i, obj_i_attr))
+		fig.savefig('%s/shapes_%d.png' % (os.path.join(save_dir,"dataset",shapes[obj_i]), n))
+
+	print ("Generated dataset in %s" % save_dir)
+
+
+def segmentation_gen():
+	#segmentation and recogition datasets are pretty much the same at this point
+	recognition_gen()
+
+
+if task_type == "recogition":
+	recognition_gen()
+elif task_type == "detection":
+	detection_gen()
+elif task_type == "segmentation":
+	segmentation_gen()
