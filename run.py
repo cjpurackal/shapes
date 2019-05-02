@@ -22,10 +22,13 @@ parser.add_argument(
 args = parser.parse_args()
 canvas_size = args.canvas_size
 shapes = args.shapes
+num_images = args.num_images
+save_dir = args.save_dir
+
+assert save_dir, "specify save directory"
 
 #need to make an option for setting up the attribs dynamically
 shapes_attribs = [[20], [15, 15]]
-num_images = args.num_images
 bbox_label_format = 'bbox'
 shuffle_bg = True
 shuffle_shape_color = True
@@ -63,14 +66,14 @@ def gen_bbox(x, y, i, attr):
 			'w': 2 * shapes_attribs[i][0], 'h': 2 * shapes_attribs[i][0]}
 
 
-def save_dir(path):
+def save_dir_paths(path):
 	img_path = os.path.join(path, "dataset", "images")
 	lab_path = os.path.join(path, "dataset", "labels_pascalvoc")
 	os.makedirs(img_path)
 	os.makedirs(lab_path)
 	return img_path, lab_path
 
-img_path, lab_path = save_dir(args.save_dir)
+img_path, lab_path = save_dir_paths(save_dir)
 
 
 for n in range(num_images):
@@ -104,4 +107,4 @@ for n in range(num_images):
 	with open('%s/shapes_%d.json' % (lab_path, n), 'w') as outfile:
 		json.dump(obj_bbox, outfile)
 
-print ("Generated dataset saved in %s" % args.save_dir)
+print ("Generated dataset saved in %s" % save_dir)
