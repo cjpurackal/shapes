@@ -4,6 +4,8 @@ import json
 import os
 import argparse
 
+colors = ['blue','green','red','cyan','magenta','yellow','black','white']
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -18,12 +20,22 @@ parser.add_argument(
 parser.add_argument(
 		"--shapes", help="The shapes that you need draw in canvas",
 		nargs='+', default=['circle', 'rect'])
+parser.add_argument(
+		"--shape_color", help="specify a particular color for the shapes",
+		type=str, default='blue')
+parser.add_argument(
+		"--shuffle_color", help="shuffle colors for the shape",
+		type=bool, default=False)
+
 
 args = parser.parse_args()
 canvas_size = args.canvas_size
 shapes = args.shapes
 num_images = args.num_images
 save_dir = args.save_dir
+shape_color = args.shape_color
+shuffle_color = args.shuffle_color
+
 
 assert save_dir, "specify save directory"
 
@@ -47,11 +59,13 @@ num_columns = int(canvas_x / (mx))
 
 def make(x, y, i, attr):
 	if shapes[i] == 'rect':
+		color = shuffle_color*colors[np.random.randint(0,7)] + (1 - shuffle_color)*shape_color
 		return plt.Rectangle(
-				(x, y), shapes_attribs[i][0], shapes_attribs[i][1])
+				(x, y), shapes_attribs[i][0], shapes_attribs[i][1], color=color)
 	elif shapes[i] == 'circle':
+		color = shuffle_color*colors[np.random.randint(0,7)] + (1 - shuffle_color)*shape_color
 		rad = shapes_attribs[i][0]
-		return plt.Circle((x, y), rad)
+		return plt.Circle((x, y), rad, color=color)
 
 
 def gen_bbox(x, y, i, attr):
