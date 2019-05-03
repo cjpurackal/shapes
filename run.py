@@ -4,13 +4,17 @@ import json
 import os
 import argparse
 
-colors = ['blue','green','red','cyan','magenta','yellow','black','white']
+
+colors = [
+	'blue', 'green', 'red', 'cyan',
+	'magenta', 'yellow', 'black', 'white']
 task_types = ['recognition', 'detection', 'segmentation']
-shape_attribs = {'rect':[15, 15], 'circle':[20]}	
+shape_attribs = {'rect': [15, 15], 'circle': [20]}
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-		"--save_dir", help="path to where you want to save the dataset",
+		"--save_dir",
+		help="path to where you want to save the dataset",
 		type=str)
 parser.add_argument(
 		"--image_size", help="size of the image", nargs='+',
@@ -19,7 +23,9 @@ parser.add_argument(
 		"--num_images", help="number of images for your dataset",
 		type=int, default=10)
 parser.add_argument(
-		"--shapes", help="shapes that you require in your dataset. Available: %s"%str(list(shape_attribs.keys())),
+		"--shapes",
+		help="shapes that you require in your dataset. Available: %s"
+		% str(list(shape_attribs.keys())),
 		nargs='+', default=['circle', 'rect'])
 parser.add_argument(
 		"--shape_color", help="specify a particular color for all the shapes",
@@ -28,8 +34,8 @@ parser.add_argument(
 		"--shuffle_color", help="shuffle colors for the shapes",
 		type=bool, default=False)
 parser.add_argument(
-		"--task_type", help="specify type of task. Available: %s"%str(task_types),
-		type=str, default='detection')
+		"--task_type", help="specify type of task. Available: %s"
+		% str(task_types), type=str, default='detection')
 
 
 args = parser.parse_args()
@@ -45,7 +51,7 @@ assert save_dir, "specify save directory"
 assert shape_color in colors, "Available colors :"+str(colors)
 assert task_type in task_types, "Available task types :"+str(task_types)
 
-#need to make an option for setting up the attribs dynamically
+# need to make an option for setting up the attribs dynamically
 shapes = list(set(shapes))
 bbox_label_format = 'bbox'
 shuffle_bg = True
@@ -65,11 +71,14 @@ num_columns = int(image_w / (mx))
 
 def make(x, y, i):
 	if shapes[i] == 'rect':
-		color = shuffle_color*colors[np.random.randint(0,7)] + (1 - shuffle_color)*shape_color
+		color = (shuffle_color*colors[np.random.randint(0, 7)]
+				+ (1 - shuffle_color)*shape_color)
 		return plt.Rectangle(
-				(x, y), shape_attribs["rect"][0], shape_attribs["rect"][1], color=color)
+				(x, y), shape_attribs["rect"][0],
+				shape_attribs["rect"][1], color=color)
 	elif shapes[i] == 'circle':
-		color = shuffle_color*colors[np.random.randint(0,7)] + (1 - shuffle_color)*shape_color
+		color = (shuffle_color*colors[np.random.randint(0, 7)]
+				+ (1 - shuffle_color)*shape_color)
 		rad = shape_attribs["circle"][0]
 		return plt.Circle((x, y), rad, color=color)
 
@@ -84,8 +93,6 @@ def gen_bbox(x, y, i):
 			'object': 'circle', 'x': x - shape_attribs["circle"][0],
 			'y': y - shape_attribs["circle"][0],
 			'w': 2 * shape_attribs["circle"][0], 'h': 2 * shape_attribs["circle"][0]}
-
-
 
 
 def detection_gen():
@@ -130,12 +137,12 @@ def detection_gen():
 
 	print ("Generated dataset in %s" % save_dir)
 
+
 def recognition_gen():
 	def make_dirs():
 		for shape in shapes:
 			os.makedirs(os.path.join(save_dir, "dataset", shape))
-	
-	# image_w = image_h = 
+	# image_w = image_h =
 	make_dirs()
 	for n in range(num_images):
 
@@ -160,8 +167,6 @@ def recognition_gen():
 			y = np.random.randint(
 							2*rad,
 							image_h-2*rad)
-
-
 		fig, ax = plt.subplots(
 				figsize=(int(image_w/100), int(image_h/100)))
 		ax = fig.add_axes([0, 0, 1, 1])
@@ -169,15 +174,16 @@ def recognition_gen():
 		ax.set_ylim([0, image_h])
 		plt.gca().invert_yaxis()
 		ax.add_artist(make(x, y, obj_i))
-		fig.savefig('%s/shapes_%d.png' % (os.path.join(save_dir,"dataset",shapes[obj_i]), n))
+		fig.savefig(
+			'%s/shapes_%d.png'
+			% (os.path.join(save_dir, "dataset", shapes[obj_i]), n))
 
 	print ("Generated dataset in %s" % save_dir)
 
 
 def segmentation_gen():
-	#segmentation and recogition datasets are pretty much the same at this point
+	# segmentation and recogition datasets are pretty much the same at this point
 	recognition_gen()
-
 
 if task_type == "recognition":
 	recognition_gen()
