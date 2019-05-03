@@ -50,16 +50,16 @@ shapes = list(set(shapes))
 bbox_label_format = 'bbox'
 shuffle_bg = True
 shuffle_shape_color = True
-canvas_x = image_size[0]
-canvas_y = image_size[1]
-x_white_space = canvas_x/10
-y_white_space = canvas_y/10
+image_w = image_size[0]
+image_h = image_size[1]
+x_white_space = image_w/10
+y_white_space = image_h/10
 mx = 0
 for attr in list(shape_attribs.values()):
 	if max(attr) > mx:
 		mx = max(attr)
-num_rows = int(canvas_y / (mx))
-num_columns = int(canvas_x / (mx))
+num_rows = int(image_h / (mx))
+num_columns = int(image_w / (mx))
 # shapes and shape atrribs validation here
 
 
@@ -116,10 +116,10 @@ def detection_gen():
 					objs.append(make(x, y, obj_i))
 					obj_bbox.append(gen_bbox(x, y, obj_i))
 		fig, ax = plt.subplots(
-				figsize=(int(canvas_x/100), int(canvas_y/100)))
+				figsize=(int(image_w/100), int(image_h/100)))
 		ax = fig.add_axes([0, 0, 1, 1])
-		ax.set_xlim([0, canvas_x])
-		ax.set_ylim([0, canvas_y])
+		ax.set_xlim([0, image_w])
+		ax.set_ylim([0, image_h])
 		plt.gca().invert_yaxis()
 
 		for i, obj in enumerate(objs):
@@ -135,38 +135,38 @@ def recognition_gen():
 		for shape in shapes:
 			os.makedirs(os.path.join(save_dir, "dataset", shape))
 	
-	canvas_x = canvas_y = 100
+	# image_w = image_h = 
 	make_dirs()
 	for n in range(num_images):
 
 		obj_i = int(n/int(num_images/len(shapes)))
 		if list(shape_attribs.keys())[obj_i] == "rect":
-			rect_w = rect_h = np.random.randint(canvas_x/4, 3*canvas_x/4)
+			rect_w = rect_h = np.random.randint(image_w/4, 3*image_w/4)
 			shape_attribs["rect"] = [rect_w, rect_h]
 
 			x = np.random.randint(
 							0,
-							canvas_x/4)
+							image_w/4)
 			y = np.random.randint(
 							0,
-							canvas_y/4)
+							image_h/4)
 		if list(shape_attribs.keys())[obj_i] == "circle":
-			rad = np.random.randint(canvas_x/8, canvas_x/4)
+			rad = np.random.randint(image_w/8, image_w/4)
 			shape_attribs["circle"] = [rad]
 
 			x = np.random.randint(
 							2*rad,
-							canvas_x-2*rad)
+							image_w-2*rad)
 			y = np.random.randint(
 							2*rad,
-							canvas_y-2*rad)
+							image_h-2*rad)
 
 
 		fig, ax = plt.subplots(
-				figsize=(int(canvas_x/100), int(canvas_y/100)))
+				figsize=(int(image_w/100), int(image_h/100)))
 		ax = fig.add_axes([0, 0, 1, 1])
-		ax.set_xlim([0, canvas_x])
-		ax.set_ylim([0, canvas_y])
+		ax.set_xlim([0, image_w])
+		ax.set_ylim([0, image_h])
 		plt.gca().invert_yaxis()
 		ax.add_artist(make(x, y, obj_i))
 		fig.savefig('%s/shapes_%d.png' % (os.path.join(save_dir,"dataset",shapes[obj_i]), n))
