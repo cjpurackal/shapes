@@ -50,5 +50,4 @@ Visualize the generated dataset
 ```
 python visualize.py --dataset_dir /tmp/dataset
 ```
-![](imgs/shapes_1.png)
-![](imgs/shapes_2.png)
+![](imgs/readme.png)
