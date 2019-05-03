@@ -6,7 +6,7 @@ import argparse
 
 colors = ['blue','green','red','cyan','magenta','yellow','black','white']
 task_types = ['recognition', 'detection', 'segmentation']
-all_shapes = ['rect', 'circle']
+shape_attribs = {'rect':[15, 15], 'circle':[20]}	
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -46,8 +46,7 @@ assert shape_color in colors, "Available colors :"+str(colors)
 assert task_type in task_types, "Available task types :"+str(task_types)
 
 #need to make an option for setting up the attribs dynamically
-shapes_attribs = [[20], [15, 15]]
-shapes = set(shapes)
+shapes = list(set(shapes))
 bbox_label_format = 'bbox'
 shuffle_bg = True
 shuffle_shape_color = True
@@ -56,7 +55,7 @@ canvas_y = image_size[1]
 x_white_space = canvas_x/10
 y_white_space = canvas_y/10
 mx = 0
-for attr in shapes_attribs:
+for attr in list(shape_attribs.values()):
 	if max(attr) > mx:
 		mx = max(attr)
 num_rows = int(canvas_y / (mx))
@@ -64,27 +63,27 @@ num_columns = int(canvas_x / (mx))
 # shapes and shape atrribs validation here
 
 
-def make(x, y, i, attr):
+def make(x, y, i):
 	if shapes[i] == 'rect':
 		color = shuffle_color*colors[np.random.randint(0,7)] + (1 - shuffle_color)*shape_color
 		return plt.Rectangle(
-				(x, y), attr[i][0], attr[i][1], color=color)
+				(x, y), shape_attribs["rect"][0], shape_attribs["rect"][1], color=color)
 	elif shapes[i] == 'circle':
 		color = shuffle_color*colors[np.random.randint(0,7)] + (1 - shuffle_color)*shape_color
-		rad = attr[i][0]
+		rad = shape_attribs["circle"][0]
 		return plt.Circle((x, y), rad, color=color)
 
 
-def gen_bbox(x, y, i, attr):
+def gen_bbox(x, y, i):
 	if shapes[i] == 'rect':
 		return {
 			'object': 'rect', 'x': x, 'y': y,
-			'w': shapes_attribs[i][0], 'h': shapes_attribs[i][1]}
+			'w': shape_attribs["rect"][0], 'h': shape_attribs["rect"][1]}
 	elif shapes[i] == 'circle':
 		return {
-			'object': 'circle', 'x': x - shapes_attribs[i][0],
-			'y': y - shapes_attribs[i][0],
-			'w': 2 * shapes_attribs[i][0], 'h': 2 * shapes_attribs[i][0]}
+			'object': 'circle', 'x': x - shape_attribs["circle"][0],
+			'y': y - shape_attribs["circle"][0],
+			'w': 2 * shape_attribs["circle"][0], 'h': 2 * shape_attribs["circle"][0]}
 
 
 
@@ -106,7 +105,6 @@ def detection_gen():
 			objs_num = np.random.randint(0, num_columns)
 			for i in range(objs_num):
 				obj_i = np.random.randint(0, len(shapes))
-				obj_i_attr = shapes_attribs[obj_i]
 				# random x, y cord gen
 				if np.random.randint(0, 2) * i % 2:
 					x = np.random.randint(
@@ -115,8 +113,8 @@ def detection_gen():
 					y = np.random.randint(
 							mx * (2 * row) + (row > 0) * mx * 3,
 							mx * (2 * row) + (row > 0) * mx * 3 + mx)
-					objs.append(make(x, y, obj_i, obj_i_attr))
-					obj_bbox.append(gen_bbox(x, y, obj_i, obj_i_attr))
+					objs.append(make(x, y, obj_i))
+					obj_bbox.append(gen_bbox(x, y, obj_i))
 		fig, ax = plt.subplots(
 				figsize=(int(canvas_x/100), int(canvas_y/100)))
 		ax = fig.add_axes([0, 0, 1, 1])
@@ -136,20 +134,33 @@ def recognition_gen():
 	def make_dirs():
 		for shape in shapes:
 			os.makedirs(os.path.join(save_dir, "dataset", shape))
+	
 	canvas_x = canvas_y = 100
-
+	make_dirs()
 	for n in range(num_images):
-		rect_w = rect_h = circ_rad = np.random.randint(canvas_x/4, 3*canvas_x/4)
-		shapes_attribs = [[rect_w, rect_h], [circ_rad]]
 
-		obj_i = np.random.randint(0, len(shapes))
-		obj_i_attr = shapes_attribs[obj_i]
-		x = np.random.randint(
-						0,
-						canvas_x/4)
-		y = np.random.randint(
-						0,
-						canvas_y/4)
+		obj_i = int(n/int(num_images/len(shapes)))
+		if list(shape_attribs.keys())[obj_i] == "rect":
+			rect_w = rect_h = np.random.randint(canvas_x/4, 3*canvas_x/4)
+			shape_attribs["rect"] = [rect_w, rect_h]
+
+			x = np.random.randint(
+							0,
+							canvas_x/4)
+			y = np.random.randint(
+							0,
+							canvas_y/4)
+		if list(shape_attribs.keys())[obj_i] == "circle":
+			rad = np.random.randint(canvas_x/8, canvas_x/4)
+			shape_attribs["circle"] = [rad]
+
+			x = np.random.randint(
+							2*rad,
+							canvas_x-2*rad)
+			y = np.random.randint(
+							2*rad,
+							canvas_y-2*rad)
+
 
 		fig, ax = plt.subplots(
 				figsize=(int(canvas_x/100), int(canvas_y/100)))
@@ -157,7 +168,7 @@ def recognition_gen():
 		ax.set_xlim([0, canvas_x])
 		ax.set_ylim([0, canvas_y])
 		plt.gca().invert_yaxis()
-		ax.add_artist(make(x, y, obj_i, obj_i_attr))
+		ax.add_artist(make(x, y, obj_i))
 		fig.savefig('%s/shapes_%d.png' % (os.path.join(save_dir,"dataset",shapes[obj_i]), n))
 
 	print ("Generated dataset in %s" % save_dir)
@@ -168,7 +179,7 @@ def segmentation_gen():
 	recognition_gen()
 
 
-if task_type == "recogition":
+if task_type == "recognition":
 	recognition_gen()
 elif task_type == "detection":
 	detection_gen()
