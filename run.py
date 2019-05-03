@@ -10,25 +10,25 @@ shape_attribs = {'rect':[15, 15], 'circle':[20]}
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
-		"--save_dir", help="For saving the images and labels in a dir",
+		"--save_dir", help="path to where you want to save the dataset",
 		type=str)
 parser.add_argument(
-		"--image_size", help="Size of the image", nargs='+',
+		"--image_size", help="size of the image", nargs='+',
 		default=(500, 500), type=int)
 parser.add_argument(
-		"--num_images", help="Number of images need in your dataset",
+		"--num_images", help="number of images for your dataset",
 		type=int, default=10)
 parser.add_argument(
-		"--shapes", help="The shapes that you need draw in canvas",
+		"--shapes", help="shapes that you require in your dataset. Available: %s"%str(list(shape_attribs.keys())),
 		nargs='+', default=['circle', 'rect'])
 parser.add_argument(
-		"--shape_color", help="specify a particular color for the shapes",
+		"--shape_color", help="specify a particular color for all the shapes",
 		type=str, default='blue')
 parser.add_argument(
-		"--shuffle_color", help="shuffle colors for the shape",
+		"--shuffle_color", help="shuffle colors for the shapes",
 		type=bool, default=False)
 parser.add_argument(
-		"--task_type", help="specify type of task : %s"%str(task_types),
+		"--task_type", help="specify type of task. Available: %s"%str(task_types),
 		type=str, default='detection')
 
 
