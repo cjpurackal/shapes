@@ -99,8 +99,15 @@ def detection_gen():
 	def make_dirs():
 		img_path = os.path.join(save_dir, "dataset", "images")
 		lab_path = os.path.join(save_dir, "dataset", "labels_json")
-		os.makedirs(img_path)
-		os.makedirs(lab_path)
+		try:
+			os.makedirs(img_path)
+		except FileExistsError as e:
+			pass
+		finally:
+			try:
+				os.makedirs(lab_path)
+			except FileExistsError as e:
+				pass
 		return img_path, lab_path
 
 	img_path, lab_path = make_dirs()
