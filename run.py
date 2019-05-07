@@ -148,7 +148,10 @@ def detection_gen():
 def recognition_gen():
 	def make_dirs():
 		for shape in shapes:
-			os.makedirs(os.path.join(save_dir, "dataset", shape))
+			try:
+				os.makedirs(os.path.join(save_dir, "dataset", shape))
+			except FileExistsError as e:
+				pass
 	# image_w = image_h =
 	make_dirs()
 	for n in range(num_images):
