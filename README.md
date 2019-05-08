@@ -24,7 +24,7 @@ optional arguments:
   --shuffle_color SHUFFLE_COLOR
                         shuffle colors for the shapes
   --task_type TASK_TYPE
-                        specify type of task. Available: ['recognition',
+                        specify type of task. Available: ['classification',
                         'detection', 'segmentation']
 
 ```
@@ -40,9 +40,9 @@ Or you can run simply with defualt config
  python run.py --save_dir /tmp/
 ```
 
-Generate a dataset for classificatoin/recognition
+Generate a dataset for classification
 ```
-python run.py --task_type recognition --save_dir /tmp/
+python run.py --task_type classification --save_dir /tmp/
 ```
 # Visualize 
 
