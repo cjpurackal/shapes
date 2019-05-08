@@ -81,6 +81,7 @@ def make(x, y, i):
 		color = (shuffle_color*colors[np.random.randint(0, 7)]
 				+ (1 - shuffle_color)*shape_color)
 		rad = shape_attribs["circle"][0]
+		print (rad)
 		return plt.Circle((x, y), rad, color=color)
 
 
@@ -170,7 +171,7 @@ def classification_gen():
 							0,
 							image_h/4)
 		if list(shape_attribs.keys())[obj_i] == "circle":
-			rad = np.random.randint(image_w/8, image_w/4)
+			rad = np.random.randint(image_w/6, image_w/4)
 			shape_attribs["circle"] = [rad]
 
 			x = np.random.randint(
