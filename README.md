@@ -46,7 +46,7 @@ python run.py --task_type recognition --save_dir /tmp/
 ```
 # Visualize 
 
-Visualize the generated dataset
+Visualize the generated dataset for object detection
 ```
 python visualize.py --dataset_dir /tmp/dataset
 ```
