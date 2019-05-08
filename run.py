@@ -142,7 +142,8 @@ def detection_gen():
 		fig.savefig('%s/shapes_%d.png' % (img_path, n))
 		with open('%s/shapes_%d.json' % (lab_path, n), 'w') as outfile:
 			json.dump(obj_bbox, outfile)
-
+		plt.clf()
+		plt.close()	
 	print ("Generated dataset in %s" % save_dir)
 
 
@@ -188,7 +189,8 @@ def classification_gen():
 		fig.savefig(
 			'%s/shapes_%d.png'
 			% (os.path.join(save_dir, "dataset", shapes[obj_i]), n))
-
+		plt.clf()
+		plt.close()
 	print ("Generated dataset in %s" % save_dir)
 
 
