@@ -8,7 +8,7 @@ import argparse
 colors = [
 	'blue', 'green', 'red', 'cyan',
 	'magenta', 'yellow', 'black', 'white']
-task_types = ['recognition', 'detection', 'segmentation']
+task_types = ['classification', 'detection', 'segmentation']
 shape_attribs = {'rect': [15, 15], 'circle': [20]}
 
 parser = argparse.ArgumentParser()
@@ -145,7 +145,7 @@ def detection_gen():
 	print ("Generated dataset in %s" % save_dir)
 
 
-def recognition_gen():
+def classification_gen():
 	def make_dirs():
 		for shape in shapes:
 			try:
@@ -156,7 +156,7 @@ def recognition_gen():
 	make_dirs()
 	for n in range(num_images):
 
-		obj_i = int(n/int(num_images/len(shapes)))
+		obj_i = int(n/(num_images/len(shapes)))
 		if list(shape_attribs.keys())[obj_i] == "rect":
 			rect_w = rect_h = np.random.randint(image_w/4, 3*image_w/4)
 			shape_attribs["rect"] = [rect_w, rect_h]
@@ -193,10 +193,10 @@ def recognition_gen():
 
 def segmentation_gen():
 	# segmentation and recogition datasets are pretty much the same at this point
-	recognition_gen()
+	classification_gen()
 
-if task_type == "recognition":
-	recognition_gen()
+if task_type == "classification":
+	classification_gen()
 elif task_type == "detection":
 	detection_gen()
 elif task_type == "segmentation":
