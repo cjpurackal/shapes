@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import json
 import os
+import tqdm
 import argparse
 
 
@@ -112,7 +113,7 @@ def detection_gen():
 
 	img_path, lab_path = make_dirs()
 
-	for n in range(num_images):
+	for n in tqdm.tqdm(range(num_images)):
 		objs = []
 		obj_bbox = []
 		for row in range(num_rows):
@@ -154,7 +155,7 @@ def classification_gen():
 				pass
 	# image_w = image_h =
 	make_dirs()
-	for n in range(num_images):
+	for n in tqdm.tqdm(range(num_images)):
 
 		obj_i = int(n/(num_images/len(shapes)))
 		if list(shape_attribs.keys())[obj_i] == "rect":
