@@ -81,7 +81,6 @@ def make(x, y, i):
 		color = (shuffle_color*colors[np.random.randint(0, 7)]
 				+ (1 - shuffle_color)*shape_color)
 		rad = shape_attribs["circle"][0]
-		print (rad)
 		return plt.Circle((x, y), rad, color=color)
 
 
