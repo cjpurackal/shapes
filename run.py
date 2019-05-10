@@ -131,7 +131,7 @@ def detection_gen():
 					objs.append(make(x, y, obj_i))
 					obj_bbox.append(gen_bbox(x, y, obj_i))
 		fig, ax = plt.subplots(
-				figsize=(int(image_w/100), int(image_h/100)))
+				figsize=(image_w/100, image_h/100))
 		ax = fig.add_axes([0, 0, 1, 1])
 		ax.set_xlim([0, image_w])
 		ax.set_ylim([0, image_h])
@@ -180,7 +180,7 @@ def classification_gen():
 							2*rad,
 							image_h-2*rad)
 		fig, ax = plt.subplots(
-				figsize=(int(image_w/100), int(image_h/100)))
+				figsize=(image_w/100, image_h/100))
 		ax = fig.add_axes([0, 0, 1, 1])
 		ax.set_xlim([0, image_w])
 		ax.set_ylim([0, image_h])
