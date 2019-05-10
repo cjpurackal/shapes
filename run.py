@@ -187,8 +187,8 @@ def classification_gen():
 		plt.gca().invert_yaxis()
 		ax.add_artist(make(x, y, obj_i))
 		fig.savefig(
-			'%s/shapes_%d.png'
-			% (os.path.join(save_dir, "dataset", shapes[obj_i]), n))
+			'%s/%s_%d.png'
+			% (os.path.join(save_dir, "dataset", shapes[obj_i]), shapes[obj_i], n))
 		plt.clf()
 		plt.close()
 	print ("Generated dataset in %s" % save_dir)
