@@ -1,5 +1,5 @@
 # shapes :large_blue_circle: :large_orange_diamond: :small_red_triangle: :red_circle:
-A dataset generator for validating computer vision models for classification, detection and segmentation before testing it out with real world datasets
+A sample dataset generator for validating computer vision models for classification, detection and segmentation before testing it out with real world datasets
 
 # Usage
 ```
